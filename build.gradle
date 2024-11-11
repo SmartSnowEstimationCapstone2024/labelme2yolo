@@ -1,0 +1,49 @@
+plugins {
+   id 'java'
+   id 'application'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation libs.json
+}
+
+testing {
+    suites {
+        test {
+            useJUnitJupiter('5.10.3')
+        }
+    }
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+    sourceSets {
+        main {
+            java {
+                srcDir 'src/main'
+            }
+        }
+    }
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'com.snowcap.labelme2coco.Main'
+    }
+
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+application {
+    mainClass = 'org.snowcap.labelme2yolo.Main'
+}
+
+defaultTasks('clean', 'build', 'jar')
